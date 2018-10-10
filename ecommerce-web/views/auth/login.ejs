@@ -1,0 +1,46 @@
+<%- include('../base/header') -%>
+
+    <!-- Login Form -->
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <form action="/auth/login" method="POST">
+            <div class="form-group">
+              <input type="email" name="email" id="email" class="form-control" placeholder="email" required="true">
+            </div>
+
+            <div class="form-group">
+              <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="true">
+            </div>
+
+            <div class="checkbox">
+              <label>
+                <input name="keepMeLoggedIn" id="keepMeLoggedIn" value="keepMeLoggedIn" type="checkbox" checked="checked" />
+                <span> Keep me logged in</span>
+              </label>
+
+            </div>
+
+            <input type="hidden" name="_csrf" value="<%=csrf%>">
+
+            <p class="text-center">
+              <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                  <button type="submit" class="btn btn-success btn-block">LOGIN</button>
+                </div>
+              </div>
+            </p>
+
+            <p>
+              <small>Did you <a href="/auth/Forgot" class="">Forget your Password?!!</a></small>
+            </p>
+
+            <p>
+              <small>Already have an <a href="/auth/signup">account</a></small>
+            </p>
+
+          </form>
+        </div>
+      </div>
+    <!-- End login form -->
+
+<%- include('../base/footer') -%>

@@ -1,0 +1,31 @@
+{
+  "name": "oracle-server",
+  "version": "1.0.0",
+  "description": "A server for the oracle functionality of a decentralized data ownership application system.",
+  "main": "server.js",
+  "author": "Elvis Lutta",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.1",
+    "body-parser": "^1.18.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.1",
+    "connect-mongodb-session": "^2.0.3",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
+    "dotenv": "^6.1.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.3.0",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.3.2",
+    "mongoose-uuid2": "^2.1.0",
+    "morgan": "^1.9.1",
+    "node-uuid": "^1.4.8",
+    "nodemailer": "^4.6.8",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.88.0"
+  }
+}

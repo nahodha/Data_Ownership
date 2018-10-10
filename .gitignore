@@ -59,3 +59,23 @@ typings/
 
 # next.js build output
 .next
+
+blockchain/
+design-diagrams/
+.ssh/
+report/
+bin/
+.ipynb_checkpoints/
+etc/
+include/
+lib/
+lib64/
+share/
+pip-selfcheck.json
+pyvenv.cfg
+*workspace*
+*.csv
+*.jpeg
+*.jpg
+*.png
+*.svg
