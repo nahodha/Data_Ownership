@@ -79,3 +79,4 @@ pyvenv.cfg
 *.jpg
 *.png
 *.svg
+git_key/
