@@ -5,7 +5,7 @@ const router = require('express').Router(),
       perPage = 20;
 
 router.get('/', (req, res) => {
-  if (req.query.apiKey == 1) {
+  if (req.query.apiKey == process.env.API_KEY) {
     let page = req.query.page || 1;
 
     Buyer
@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  if (req.query.apiKey == 1) {
+  if (req.query.apiKey == process.env.API_KEY) {
     Buyer
       .findById(req.params.id)
       .then( (buyer) => {
@@ -63,7 +63,6 @@ router.get('/:id', (req, res) => {
                 res.send({ buyer: buyer, purchases: purchase });
               }
             });
-          res.send({})
         }
       })
       .catch((err) => {
@@ -71,14 +70,14 @@ router.get('/:id', (req, res) => {
         res.status(500).send({ message: 'Server Error!' });
       });
     } else {
-      res.status(403).send({ message: 'You\'re not supposed to be here. Go Away!' });
+      res.status(403).send({ success: false, message: 'You\'re not supposed to be here. Go Away!' });
     }
 });
 
 
 router.post('/', (req, res) => {
   console.log(req.query.apiKey);
-  if (req.query.apiKey == 1) {
+  if (req.query.apiKey == process.env.API_KEY) {
     const buyer = Buyer();
 
     buyer.save((err) => {
@@ -90,7 +89,7 @@ router.post('/', (req, res) => {
       }
     })
   } else {
-    res.status(403).send({ message: 'You\'re not supposed to be here. Go Away!' });
+    res.status(403).send({ success: false, message: 'You\'re not supposed to be here. Go Away!' });
   }
 });
 
