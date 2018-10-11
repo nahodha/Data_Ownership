@@ -4,7 +4,7 @@ const router = require('express').Router(),
       request = require('request'),
       Account = require('../../models/Account');
 
-router.get('/products', (req, res, next) => {
+router.post('/products', (req, res, next) => {
   let options = {
     uri: 'http://vendo.grievy.com/api/stock',
     method: 'GET',
