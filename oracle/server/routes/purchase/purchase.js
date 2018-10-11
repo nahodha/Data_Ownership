@@ -3,14 +3,22 @@
 const router = require('express').Router(),
       request = require('request'),
       Product = require('../../models/Product'),
+      Account = require('../../models/Account'),
       User = require('../../models/User'),
-      Purchase = require('../../models/Purchase');
+      Purchase = require('../../models/Purchase'),
+      Sell = require('../../sell');
 
 router.get('/', (req, res) => {
 });
 
 router.post('/:id', (req, res, next) => {
-  user = User.findById(req.body.userId,).exec();
+  let user = User.findById(req.body.userId,).exec();
+  let vendor = Vendor.findOne({vendorName: 'vendo'}).exec();
+  let acc = Account.find({owner: user.id}).exec();
+  let acc2 = Account.find({owner: vendor.id}).exec();
+
+  let result = Sell(acc2.account, acc.account);
+
   let purchase = new Purchase();
   purchase.buyer = req.body.userId;
   purchase.product = req.params.id;
@@ -24,8 +32,10 @@ router.post('/:id', (req, res, next) => {
     }
   });
 
+
+
   let options = {
-    uri: 'http://localhost:3000/purchase',
+    uri: 'http://vendo.grievy.com/api/purchase',
     method: 'POST',
     qs: {apiKey: process.env.API_KEY},
     json: {

@@ -1,14 +1,15 @@
 'use strict';
 
 const router = require('express').Router(),
-  User = require('../../models/User');
+  User = require('../../models/User'),
+  Account = require('../../models/Account');
 
 router.get('/', (req, res) => {
 
   res.send({success: true, message: 'hello'});
 });
 
-router.post('/', (req, response) => {
+router.post('/', async (req, response) => {
   User.findOne({ 'email': req.body.email })
     .then( async (user) => {
 
@@ -20,7 +21,9 @@ router.post('/', (req, response) => {
         return response.send({success: false, message: messages});
 
       }
-      return response.send({success: true, user: user});
+
+      let acc = await Account.find({owner: user.id}).exec();
+      return response.send({success: true, user: user, account: acc});
 
 
 

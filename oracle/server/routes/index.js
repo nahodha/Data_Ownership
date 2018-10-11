@@ -6,10 +6,12 @@ const router = require('express').Router();
 const authRouters = require('./auth/index'),
       baseRouters = require('./base_routes/index'),
       purchaseRouters = require('./purchase/index'),
+      userRouters = require('/user/user'),
       vendorRouters = require('./vendor/index');
 
 
 router.use('/', baseRouters);
+router.use('/user', userRouters);
 router.use('/auth', authRouters);
 router.use('/purchase', purchaseRouters);
 router.use('/vendor', vendorRouters);

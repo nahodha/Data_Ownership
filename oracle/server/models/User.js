@@ -23,6 +23,10 @@ const UserSchema = mongoose.Schema(
       type: String,
       default: ''
     },
+    mine: {
+      Type: Boolean,
+      default: false
+    },
     resetPasswordToken: {
       type: String,
       default: ''

@@ -3,7 +3,11 @@
 const router = require('express').Router(),
       request = require('request'),
       User = require('../../models/User'),
-      signupValidator = require('./validators/validators').SignUpValidation();
+      Account = require('../../models/Account'),
+      const Web3 = require('web3'),
+      TestRPC = require('ethereumjs-testrpc');
+
+const web3 = new Web3(TestRPC.provider());
 
 router.get('/', (req, res) => {
 
@@ -40,10 +44,15 @@ router.post('/', (req, response) => {
           console.error('ERROR SAVING NEW USER\n\n' + err);
           response.status(500).send({success: false, message: 'Error saving new user'});
         }
-
-        // req.flash('sucess', 'You have successfully registered please Log In to access your account.')
-        // req.session.loggedInUser = newUser.id;
-        // req.session.cookie.expires = new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)); // 2 days
+        let acc = web3.eth.accounts.create();
+        let account = new Account({account: acc.address, privateKey:acc.privateKey,
+          publicKey:acc.publicKey, owner:newUser.id});
+          account.save((err) => {
+            if (err) {
+              console.error('account failed to create');
+              response.send({success: false, message: 'Failed to create account'})
+            }
+          })
       });
 
       // Create new useranonymous id
