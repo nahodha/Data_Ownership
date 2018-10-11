@@ -23,7 +23,7 @@ router.post('/', async (req, response) => {
       }
 
       let acc = await Account.find({owner: user.id}).exec();
-      return response.send({success: true, user: user, account: acc, notification: user.mine});
+      return response.send({success: true, user: user, account: acc, notification: true});
 
 
 
