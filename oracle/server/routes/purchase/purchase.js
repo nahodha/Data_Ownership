@@ -19,6 +19,8 @@ router.post('/:id', (req, res, next) => {
 
   let result = Sell(acc2.account, acc.account);
 
+  console.log(result);
+
   let purchase = new Purchase();
   purchase.buyer = req.body.userId;
   purchase.product = req.params.id;

@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 
   Product
     .find({})
-    .select('productName price description totalStock')
+    .select('productName price category description totalStock')
     .skip((perPage * page) - perPage)
     .limit(perPage)
     .exec( async (err, products) => {

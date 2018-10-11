@@ -20,6 +20,7 @@ router.post('/', (req, res) => {
           productName: req.body.productName,
           description: req.body.description,
           price: req.body.price,
+          category: req.body.category,
           totalStock: req.body.totalStock
         });
 
