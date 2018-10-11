@@ -10,8 +10,8 @@ module.exports = (sender, receiver) => {
   web3.eth.defaultAccount = sender;
 
   let abiContract = web3.eth.contract(abi);
-  let contract = abiContract.at(contract.address);
-  var send = web3.eth.sendTransaction({from:receiver,to:contract.address, value:web3.toWei(0.05, "ether")});
+  let contractObj = abiContract.at(contract.address);
+  var send = web3.eth.sendTransaction({from:receiver,to:contractObj.address, value:web3.toWei(0.05, "ether")});
 
   contract.setSeller(receiver);
   contract.buy();

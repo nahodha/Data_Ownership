@@ -6,7 +6,7 @@ const router = require('express').Router();
 const authRouters = require('./auth/index'),
       baseRouters = require('./base_routes/index'),
       purchaseRouters = require('./purchase/index'),
-      userRouters = require('/user/user'),
+      userRouters = require('./user/user'),
       vendorRouters = require('./vendor/index');
 
 

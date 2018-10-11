@@ -4,7 +4,7 @@ const router = require('express').Router(),
       request = require('request'),
       User = require('../../models/User'),
       Account = require('../../models/Account'),
-      const Web3 = require('web3'),
+      Web3 = require('web3'),
       TestRPC = require('ethereumjs-testrpc');
 
 const web3 = new Web3(TestRPC.provider());
