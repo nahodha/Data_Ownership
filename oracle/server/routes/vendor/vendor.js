@@ -21,7 +21,7 @@ router.post('/products', (req, res) => {
         response.send({success: false});
         // next(err);
       } else {
-        res.send({success: true, products: [json.products]});
+        res.send({success: true, products: json.products});
       }
     }
   })
