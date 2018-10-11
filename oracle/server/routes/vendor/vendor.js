@@ -4,7 +4,7 @@ const router = require('express').Router(),
       request = require('request'),
       Account = require('../../models/Account');
 
-router.post('/products', (req, res, next) => {
+router.post('/products', (req, res) => {
   let options = {
     uri: 'http://vendo.grievy.com/api/stock',
     method: 'GET',
@@ -14,14 +14,14 @@ router.post('/products', (req, res, next) => {
   request(options, (err, response, body) =>{
     if (err) {
       res.send({success: false});
-      next(err);
+      // next(err);
     } else {
       let json = JSON.parse(body);
       if (!json.success) {
         response.send({success: false});
-        next(err);
+        // next(err);
       } else {
-        res.send({success: true, products: json.products});
+        res.send({success: true, products: [json.products]});
       }
     }
   })
