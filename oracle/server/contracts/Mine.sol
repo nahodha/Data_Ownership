@@ -41,8 +41,18 @@ contract Mine {
         _;
     }
 
-    function addMiner(address minerAddress) public returns (address) {
-        require(!minerAvailable, "Miner already exist's in this contract create a new one.");
+    modifier dataOwnersExists() {
+        require(!dataOwners[msg.sender], "Already registered as  a dataOwner");
+        _;
+    }
+
+
+    function addMiner(address minerAddress)
+        public
+        dataOwnersExists
+        returns (address)
+    {
+        require(!minerAvailable && msg.sender != address(0), "Miner already exist's in this contract create a new one.");
 
         miner = minerAddress;
         minerAvailable = true;
@@ -50,8 +60,11 @@ contract Mine {
         return miner;
     }
 
-    function allowMine() public returns (bool) {
-        require(!dataOwners[msg.sender], "You can only register once");
+    function allowMine()
+        public
+        dataOwnersExists
+        returns (bool)
+    {
         require(msg.sender != miner, "Miners cannot be dataOwners");
 
         dataOwners[msg.sender] = true;
@@ -69,6 +82,8 @@ contract Mine {
     {
         // Require at least .01 ether to mine users data.
         require(msg.value > .01 ether, "You require at least 0.01 ether to mine.");
+        // Require data owners before mining begins
+        require(dataOwnersCounter >= 2, "You require at least 2 data owners in the contract");
 
         dataMined = true;
 
@@ -81,9 +96,10 @@ contract Mine {
         returns (bool)
     {
         require(dataMined, "Data has already been mined.");
+        uint totalAmount = address(this).balance;
 
         for (uint i = 0; i < dataOwnersCounter; i ++) {
-            dOwnAddresses[i].transfer(address(this).balance/dataOwnersCounter);
+            dOwnAddresses[i].transfer(totalAmount/(dataOwnersCounter));
             dataOwners[dOwnAddresses[i]] = false;
             dOwnAddresses[i] = address(0);
         }
@@ -92,6 +108,28 @@ contract Mine {
         // Set dataNotMined to false so that currency cannot be sent twice.
         dataMined = false;
         miner = address(0);
+        minerAvailable = false;
+
+        return true;
+    }
+
+    function getBal() public view returns (uint) {
+        return address(this).balance;
+    }
+
+    function reset() public returns (bool) {
+        for (uint i = 0; i < dataOwnersCounter; i++) {
+            dataOwners[dOwnAddresses[i]] = false;
+            dOwnAddresses[i] = address(0);
+        }
+
+        // Return all the currency to miner. Not the best way but will fix
+        miner.transfer(address(this).balance);
+
+        dataOwnersCounter = 0;
+        dataMined = false;
+        miner = address(0);
+        minerAvailable = false;
 
         return true;
     }
