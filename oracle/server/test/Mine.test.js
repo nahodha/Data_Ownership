@@ -1,8 +1,8 @@
 const assert = require('assert'),
       ganache = require('ganache-cli'),
       Web3 = require('web3'),
-      compiledMineFactory = require('../build/MineFactory.json'),
-      compiledMine = require('../build/Mine.json');
+      compiledMineFactory = require('../smart_contracts/build/MineFactory.json'),
+      compiledMine = require('../smart_contracts/build/Mine.json');
 
 require('events').EventEmitter.prototype.setMaxListeners(100);
 
@@ -82,6 +82,12 @@ describe('Mine', () => {
         gas: '1000000'
       });
 
+    await mine.methods.allowMine()
+      .send({
+        from: accounts[2],
+        gas: '1000000'
+      });
+
     const mined = await mine.methods.startMine()
       .send({
         value: web3.utils.toWei('2', 'ether'),
@@ -92,7 +98,7 @@ describe('Mine', () => {
     assert(mined, 'Mining failed!');
   });
 
-  it('pay data owners', async() => {
+  it('complete mine transaction.', async() => {
     await mine.methods.addMiner(accounts[0])
       .send({
         from: accounts[0],
@@ -102,6 +108,12 @@ describe('Mine', () => {
     await mine.methods.allowMine()
       .send({
         from: accounts[1],
+        gas: '1000000'
+      });
+
+    await mine.methods.allowMine()
+      .send({
+        from: accounts[2],
         gas: '1000000'
       });
 
@@ -119,5 +131,79 @@ describe('Mine', () => {
       });
 
     assert(payOwners, 'Data owners payment failed!');
+  });
+
+  it('Only miners can call mine method', async () => {
+    try {
+      await mine.methods.addMiner(accounts[0])
+      .send({
+        from: accounts[0],
+        gas: '1000000'
+      });
+
+      await mine.methods.allowMine()
+        .send({
+          from: accounts[1],
+          gas: '1000000'
+        });
+
+      await mine.methods.allowMine()
+        .send({
+          from: accounts[2],
+          gas: '1000000'
+        });
+
+      await mine.methods.startMine()
+        .send({
+          value: web3.utils.toWei('2', 'ether'),
+          from: accounts[2],
+          gas: '1000000'
+        });
+
+      assert(false);
+    } catch (err) {
+      assert(err);
+    }
+  });
+
+  it('Only data owners can call payDataOwners', async() => {
+    try {
+      await mine.methods.addMiner(accounts[0])
+        .send({
+          from: accounts[0],
+          gas: '1000000'
+        });
+
+      await mine.methods.allowMine()
+        .send({
+          from: accounts[1],
+          gas: '1000000'
+        });
+
+      await mine.methods.allowMine()
+        .send({
+          from: accounts[2],
+          gas: '1000000'
+        });
+
+      await mine.methods.startMine()
+        .send({
+          value: web3.utils.toWei('2', 'ether'),
+          from: accounts[0],
+          gas: '1000000'
+        });
+
+      await mine.methods.payDataOwners()
+        .send({
+          from: accounts[2],
+          gas: '1000000'
+        });
+
+      assert(false);
+
+    } catch (err) {
+      assert(err, 'No error was found!');
+    }
+
   });
 });

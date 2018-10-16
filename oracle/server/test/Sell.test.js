@@ -1,8 +1,8 @@
 const assert = require('assert'),
       ganache = require('ganache-cli'),
       Web3 = require('web3'),
-      compiledSellFactory = require('../build/SellFactory.json'),
-      compiledSell = require('../build/Sell.json');
+      compiledSellFactory = require('../smart_contracts/build/SellFactory.json'),
+      compiledSell = require('../smart_contracts/build/Sell.json');
 
 require('events').EventEmitter.prototype.setMaxListeners(100);
 

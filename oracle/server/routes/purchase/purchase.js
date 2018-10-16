@@ -3,41 +3,66 @@
 const router = require('express').Router(),
       request = require('request'),
       Product = require('../../models/Product'),
+      Vendor = require('../../models/Vendor'),
       Account = require('../../models/Account'),
       User = require('../../models/User'),
       Purchase = require('../../models/Purchase'),
-      Sell = require('../../sell');
+      web3 = require('../../smart_contracts/provider'),
+      SellContract = require('../../smart_contracts/createSell');
 
 router.get('/', (req, res) => {
+  res.send({message: 'hello'});
 });
 
-router.post('/:id', (req, res, next) => {
-  let user = User.findById(req.body.userId,).exec();
-  let vendor = Vendor.findOne({vendorName: 'vendo'}).exec();
-  let acc = Account.find({owner: user.id}).exec();
-  let acc2 = Account.find({owner: vendor.id}).exec();
+router.post('/:id', async (req, res, ) => {
+  let user = await User.findById(req.body.userId,).exec();
+  let vendor = await Vendor.findOne({ vendorName: 'vendo' }).exec();
+  let buyerAccount = await Account.findOne({ owner: req.body.userId }).exec();
+  let sellerAccount = await Account.findOne({ owner: vendor.id }).exec();
 
-  let result = Sell(acc2.account, acc.account);
+  if (!user || !vendor || !buyerAccount || !sellerAccount) {
+    return res.status(500).send({ success: false, message: 'Failure!' });
+  }
 
-  console.log(result);
+  // Unlock accounts
+  web3.eth.personal.unlockAccount(buyerAccount.address, req.body.password, process.env.UNLOCK_TIME);
+  web3.eth.personal.unlockAccount(sellerAccount.address, process.env.VENDOR_PASSWORD, process.env.UNLOCK_TIME);
+
+  // Create new sell contract with the buyer address
+  // The buyer pays for creation of the contract
+  const Sell = await SellContract(buyerAccount.address);
+
+  let addedBuyer = await Sell.methods.addBuyer(sellerAccount.address)
+    .send({
+      from: buyerAccount.address,
+      gas: '1000000'
+    });
+
+  if (addedBuyer) {
+    let buy = await Sell.methods.buy()
+      .send({
+        value: web3.utils.toWei('0.002', 'ether'),
+        from: buyerAccount.address,
+        gas: '1000000'
+      });
+  }
 
   let purchase = new Purchase();
+
   purchase.buyer = req.body.userId;
-  purchase.product = req.params.id;
+  // purchase.product = req.params.id;
   purchase.amountBought = req.body.amount;
   purchase.totalPrice = req.body.price;
 
   purchase.save((err) => {
     if (err) {
-      res.send({success: false});
-      next(err);
+      res.send({ success: false });
     }
   });
 
-
-
   let options = {
-    uri: 'http://vendo.grievy.com/api/purchase',
+    // uri: process.env.VENDOR_URL
+    uri: 'http://localhost:3001'+ '/api/purchase',
     method: 'POST',
     qs: {apiKey: process.env.API_KEY},
     json: {
@@ -48,20 +73,15 @@ router.post('/:id', (req, res, next) => {
     }
   };
 
-  request(options, (err, res, body) => {
+  request(options, (err, result, body) => {
     if (err) {
       res.send({success: false});
-      next(err);
     } else {
-      res.send({succeess: true});
-
-      let json = JSON.parse(body);
-      if (!json.success) {
+      // let json = JSON.parse(body);
+      if (!body.success) {
         res.send({success: false});
-        next(err);
       }
       res.send({success: true});
-      next();
     }
   });
 

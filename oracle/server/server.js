@@ -16,6 +16,10 @@ const express = require('express'),
       _ = require('lodash');
 
 
+// Initialize express
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 // Initialize mongodb connection
 let mongoDB = 'mongodb://' + process.env.MONGO_CONNECTION + '/' + process.env.MONGO_MAIN_DB;
 mongoose.connect(mongoDB, function(err) {
@@ -45,11 +49,6 @@ store.on('error', function(err) {
 
 // Defualt db connection
 let db = mongoose.connection;
-
-// Initialize express
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 
 app.use(morgan('combined'));
 

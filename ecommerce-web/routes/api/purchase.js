@@ -6,8 +6,8 @@ const router = require('express').Router(),
       Buyer = require('../../models/User');
 
 router.post('/', (req, res) => {
-  product = Product.find({name: req.body.productName}).exec();
-  buyer = Buyer.find({buyerId: req.body.buyer}).exec();
+  let product = Product.find({name: req.body.productName}).exec();
+  let buyer = Buyer.find({buyerId: req.body.buyer}).exec();
 
   let purchase = new Purchase();
 
@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
       res.status(500).send({success: false, message: 'Error creating new purchase!'});
       next(err);
     } else {
-      res.status(200).send({success: true});
+      res.send({success: true});
     }
   });
 });

@@ -5,9 +5,16 @@ const mongoose = require('mongoose'),
 
 
 const accountSchema = mongoose.Schema({
-  account: {
+  accountType: {
     type: String,
-    unique: true
+    default: 'normal'
+  },
+  deployer: {
+    type: Boolean,
+    default: false
+  },
+  address: {
+    type: String
   },
   privateKey: {
     type: String

@@ -1,6 +1,7 @@
 'use strict';
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+      Schema = require('mongoose').Schema;
 
 const ContractSchema = mongoose.Schema(
   {
@@ -8,9 +9,12 @@ const ContractSchema = mongoose.Schema(
       type: String,
       default: ''
     },
-    address: {
+    contractAddresses: [{
       type: String,
-      default: ''
+    }],
+    deployerAddress: {
+      type: Schema.Types.ObjectId,
+      ref: 'Account'
     }
   },
   {
