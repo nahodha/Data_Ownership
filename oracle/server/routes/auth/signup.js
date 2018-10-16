@@ -49,8 +49,7 @@ router.post('/', (req, response) => {
 
       // Create new useranonymous id
       let options = {
-        // uri: process.env.VENDOR_URL
-        uri: 'http://localhost:3001' + '/api/buyer',
+        uri: process.env.VENDOR_URL + '/api/buyer',
         method: 'POST',
         qs: {apiKey: process.env.API_KEY},
       };

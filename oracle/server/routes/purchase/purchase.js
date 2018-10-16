@@ -61,8 +61,7 @@ router.post('/:id', async (req, res, ) => {
   });
 
   let options = {
-    // uri: process.env.VENDOR_URL
-    uri: 'http://localhost:3001'+ '/api/purchase',
+    uri: process.env.VENDOR_URL + '/api/purchase',
     method: 'POST',
     qs: {apiKey: process.env.API_KEY},
     json: {

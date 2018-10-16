@@ -7,7 +7,7 @@ const router = require('express').Router(),
 
 router.get('/products', (req, res, next) => {
   let options = {
-    uri: 'http://vendo.grievy.com/api/stock',
+    uri: process.env.VENDOR_URL + '/api/stock',
     method: 'GET',
     qs: {apiKey: process.env.API_KEY}
   };
