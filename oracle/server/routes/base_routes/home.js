@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router(),
+      web3 = require('../../smart_contracts/provider'),
       Account = require('../../models/Account'),
-      Contract = require('../../models/Contract'),
       Mine = require('../../smart_contracts/getMineContract'),
       MineContract = require('../../smart_contracts/createMine');  // Temporarily here
 
@@ -21,7 +21,7 @@ router.all('/deploy', (req, res) => {
 
 });
 
-router.post('/allowmine', async (req, res) => {
+router.post('/allowMine', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     let mineeAccount = await Account.findOne({ owner: req.body.userId }).exec();
 
@@ -56,7 +56,7 @@ router.post('/addMiner', async (req, res) => {
     web3.eth.personal.unlockAccount(minerAccount.address, process.env.VENDOR_PASSWORD, process.env.UNLOCK_TIME);
 
     // Get contract assume that address will always be passed as argument for now
-    let mine = await Mine(req.body.contractAddress);
+    let mine = await MineContract(minerAccount.address);
 
     // Add dataowner to the mining pool
     let addMiner = await  mine.methods.addMiner(minerAccount.address)
