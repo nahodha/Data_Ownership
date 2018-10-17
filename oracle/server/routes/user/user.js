@@ -43,11 +43,11 @@ router.post('/account', async (req, res) => {
     balance = await web3.utils.fromWei(balance, 'ether');
 
     // Send none string for no contracts
-    if (!contract) {
+    if (contract) {
+      res.send({success: true, address: account.address, balance: balance, contractAddress: contract.contractAddresses[0]});
+    } else {
       res.send({success: true, address: account.address, balance: balance, contractAddress: 'none'});
     }
-
-    res.send({success: true, address: account.address, balance: balance, contractAddress: contract.contractAddresses[0]});
 
   } else {
     res.status(403).send({success: false, message: 'You\'re not supposed to be here'})
