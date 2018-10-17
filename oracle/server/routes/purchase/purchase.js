@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/:id', async (req, res, ) => {
-  let user = await User.findById(req.body.userId,).exec();
+  let user = await User.findById(req.body.userId).exec();
   let vendor = await Vendor.findOne({ vendorName: 'vendo' }).exec();
   let buyerAccount = await Account.findOne({ owner: req.body.userId }).exec();
   let sellerAccount = await Account.findOne({ owner: vendor.id }).exec();
@@ -25,6 +25,11 @@ router.post('/:id', async (req, res, ) => {
   }
 
   // Unlock accounts
+
+  if (!user.validUserPassword(req.body.password)) {
+    return res.send({success: false, message: 'wrong password'});
+  }
+
   web3.eth.personal.unlockAccount(buyerAccount.address, req.body.password, process.env.UNLOCK_TIME);
   web3.eth.personal.unlockAccount(sellerAccount.address, process.env.VENDOR_PASSWORD, process.env.UNLOCK_TIME);
 

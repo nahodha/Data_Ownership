@@ -3,6 +3,7 @@
 const router = require('express').Router(),
       web3 = require('../../smart_contracts/provider'),
       Account = require('../../models/Account'),
+      User = require('../../models/User'),
       Mine = require('../../smart_contracts/getMineContract'),
       MineContract = require('../../smart_contracts/createMine');  // Temporarily here
 
@@ -24,8 +25,17 @@ router.all('/deploy', (req, res) => {
 router.post('/allowMine', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     let mineeAccount = await Account.findOne({ owner: req.body.userId }).exec();
+    let user = await User.findById(req.body.userId).exec();
 
-    // Unlock accounts
+    if (!user) {
+      return res.send({ success: false, message: 'Your user does\'nt exist' });
+    }
+
+    // Unlock accounts but make sure password is correct
+    if (!user.validUserPassword(req.body.password)) {
+      return res.send({ success: false, message: 'wrong password' });
+    }
+
     web3.eth.personal.unlockAccount(mineeAccount.address, req.body.password, process.env.UNLOCK_TIME);
 
     // Get contract assume that address will always be passed as argument for now
