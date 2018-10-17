@@ -3,7 +3,8 @@
 const router = require('express').Router(),
       request = require('request'),
       User = require('../../models/User'),
-      Account = require('../../models/Account');
+      Account = require('../../models/Account'),
+      web3 = require('../../smart_contracts/provider');
 
 router.get('/products', (req, res, next) => {
   let options = {
@@ -25,15 +26,17 @@ router.get('/products', (req, res, next) => {
         res.send({success: true, products: json.products});
       }
     }
-  })
+  });
 });
 
-router.post('/accounts', (req, res) => {
-  if (req.params.apiKey == process.env.API_KEY) {
-    let user = User.find({email: req.body.email}).exec();
-    let account = Account.find({_id: user.id}).exec();
+router.post('/account', async (req, res) => {
+  if (req.query.apiKey == process.env.API_KEY) {
+    let account = await Account.findOne({ owner: req.body.userId }).exec();
 
-    res.send({success: true, account: account});
+    let balance = await web3.eth.getBalance(account.address);
+    balance = await web3.utils.fromWei(balance, 'ether');
+
+    res.send({success: true, address: account.address, balance: balance});
   } else {
     res.status(403).send({success: false, message: 'You\'re not supposed to be here'})
   }

@@ -17,17 +17,15 @@ router.post('/products', (req, res) => {
   request(options, (err, response, body) =>{
     if (err) {
       res.send({success: false});
-      // next(err);
     } else {
       let json = JSON.parse(body);
       if (!json.success) {
         response.send({success: false});
-        // next(err);
       } else {
         res.send({success: true, products: json.products});
       }
     }
-  })
+  });
 });
 
 router.post('/', (req, res) => {

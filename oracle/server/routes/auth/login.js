@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   res.send({success: true, message: 'hello'});
 });
 
-router.post('/', async (req, response) => {
+router.post('/', async (req, res) => {
   User.findOne({ 'email': req.body.email })
     .then( async (user) => {
 
@@ -18,12 +18,12 @@ router.post('/', async (req, response) => {
       if (!user || !user.validUserPassword(req.body.password)) {
 
         messages.push('Email Does not exist or Password isInvalid');
-        return response.send({success: false, message: messages});
+        return res.send({success: false, message: messages});
 
       }
 
       let acc = await Account.find({owner: user.id}).exec();
-      return response.send({success: true, user: user, account: acc, notification: true});
+      return res.send({success: true, user: user, account: acc, notification: true});
 
 
 
@@ -31,7 +31,7 @@ router.post('/', async (req, response) => {
     .catch((err) => {
 
       console.error('ERROR IN User.FindOne() local.login\n\n' + err);
-      return Response.send({success: false, message: 'error logging in'});
+      return res.send({success: false, message: 'error logging in'});
 
     });
 });

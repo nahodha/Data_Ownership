@@ -4,7 +4,7 @@ const router = require('express').Router(),
       Product = require('../../models/Product'),
       perPage = 9;
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   let page = req.query.page || 1;
 
   Product
@@ -15,7 +15,6 @@ router.get('/', (req, res, next) => {
     .exec( async (err, products) => {
       if (err) {
         res.send({success: false});
-        next(err);
       } else {
         // Get the total number of Products that can be retrieved
         await Product
