@@ -1,0 +1,52 @@
+<%- include('../base/header') -%>
+<% if(hasErrors) { %>
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <% _.forEach(messages, function(error) { %>
+      <p><%= error %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<% if(hasSuccess) { %>
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <% _.forEach(messages, function(success) { %>
+      <p><%= success %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <h2 class="text-center">PAY DATA OWNERS</h2>
+    <form action="/payOwnersGui?apiKey=<%= apiKey %>" method="POST">
+      <div class="form-group">
+        <input type="email" name="email" id="email" class="form-control" placeholder="email" required="true">
+      </div>
+
+      <div class="form-group">
+        <input type="text" name="contractAddress" id="contractAddress" class="form-control" placeholder="Contract Address" required="true">
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="true">
+      </div>
+
+      <p class="text-center">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+            <button type="submit" class="btn btn-success btn-block">PAY DATA OWNERS</button>
+          </div>
+        </div>
+      </p>
+
+    </form>
+  </div>
+</div>
+
+<%- include('../base/footer') -%>

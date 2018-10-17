@@ -1,0 +1,50 @@
+<%- include('../base/header') -%>
+
+<% if(hasErrors) { %>
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <% _.forEach(messages, function(error) { %>
+      <p><%= error %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<% if(hasSuccess) { %>
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <% _.forEach(messages, function(success) { %>
+      <p><%= success %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h2 class="text-center">ADD MINER</h2>
+      <h4 class="text-center">Enter Miner address and Password To start mining</h4>
+      <form action="/addMinerGui?apiKey=<%= apiKey %>" method="POST">
+        <div class="form-group">
+          <input type="text" name="address" id="address" class="form-control" placeholder="Address" required="true">
+        </div>
+
+        <div class="form-group">
+          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="true">
+        </div>
+
+        <p class="text-center">
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+              <button type="submit" class="btn btn-success btn-block">ADD MINER</button>
+            </div>
+          </div>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+<%- include('../base/footer') -%>
