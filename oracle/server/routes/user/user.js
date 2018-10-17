@@ -34,7 +34,7 @@ router.post('/account', async (req, res) => {
   if (req.query.apiKey == process.env.API_KEY) {
     let account = await Account.findOne({ owner: req.body.userId }).exec();
     if (!account) {
-      res.send({success: false, address: 'No Address', balance: '0.00', contractAddress: 'none'})
+      res.send({success: true, address: 'No Address', balance: '0.00', contractAddress: 'none'});
     }
     // Get mine contract if it exists and add user to mining pool
     let contract = await Contract.findOne({name: { $regex: /^Mine$/i } }).exec();
