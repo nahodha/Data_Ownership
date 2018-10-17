@@ -4,6 +4,7 @@ const router = require('express').Router(),
       request = require('request'),
       User = require('../../models/User'),
       Account = require('../../models/Account'),
+      Contract = require('../../models/Contract'),
       web3 = require('../../smart_contracts/provider');
 
 router.get('/products', (req, res, next) => {
@@ -32,11 +33,22 @@ router.get('/products', (req, res, next) => {
 router.post('/account', async (req, res) => {
   if (req.query.apiKey == process.env.API_KEY) {
     let account = await Account.findOne({ owner: req.body.userId }).exec();
+    if (!account) {
+      res.send({success: false, address: 'No Address', balance: '0.00', contractAddress: 'none'})
+    }
+    // Get mine contract if it exists and add user to mining pool
+    let contract = await Contract.findOne({name: { $regex: /^Mine$/i } }).exec();
 
     let balance = await web3.eth.getBalance(account.address);
     balance = await web3.utils.fromWei(balance, 'ether');
 
-    res.send({success: true, address: account.address, balance: balance});
+    // Send none string for no contracts
+    if (!contract) {
+      res.send({success: true, address: account.address, balance: balance, contractAddress: 'none'});
+    }
+
+    res.send({success: true, address: account.address, balance: balance, contractAddress: contract.contractAddresses[0]});
+
   } else {
     res.status(403).send({success: false, message: 'You\'re not supposed to be here'})
   }
