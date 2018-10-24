@@ -29,9 +29,9 @@ router.all('/account', (req, res) => {
     } else {
       let json = JSON.parse(body);
       if (!json.success) {
-        res.render('account', {hasDetails: false, balance: 0, address: 'none', contract: 'none'});
+        res.render('account', {title: 'Account', hasDetails: false, balance: 0, address: 'none', contract: 'none'});
       } else {
-        res.render('account', {hasDetails: true, balance: json.balance, address: json.vendorAddress, contract: json.contract});
+        res.render('account', {title: 'Account', hasDetails: true, balance: json.balance, address: json.vendorAddress, contract: json.contract});
       }
     }
   });
