@@ -1,0 +1,15 @@
+<%- include('./base/header.ejs') -%>
+
+<% if (hasDetails) { %>
+
+  <p><span>Account Address: </span> <strong><%= address %></strong></p>
+
+  <p><span>Contract Address: </span> <strong><%= contract %></strong></p>
+
+  <p><span>Account Balance: </span> <strong>ETH: <%= balance %></strong></p>
+
+<% } else { %>
+<h1>Create account first!</h1>
+<% } %>
+
+<%- include('./base/footer.ejs') -%>

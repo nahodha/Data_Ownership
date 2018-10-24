@@ -21,7 +21,7 @@ router.get('/products', (req, res, next) => {
     } else {
       let json = JSON.parse(body);
       if (!json.success) {
-        response.send({success: false});
+        res.send({success: false});
         next(err);
       } else {
         res.send({success: true, products: json.products});

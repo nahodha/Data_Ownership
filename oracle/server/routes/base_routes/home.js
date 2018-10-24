@@ -4,6 +4,8 @@ const router = require('express').Router(),
       web3 = require('../../smart_contracts/provider'),
       Account = require('../../models/Account'),
       User = require('../../models/User'),
+      Vendor = require('../../models/Vendor'),
+      Contract = require('../../models/Contract'),
       Mine = require('../../smart_contracts/getMineContract'),
       MineContract = require('../../smart_contracts/createMine');  // Temporarily here
 
@@ -296,6 +298,35 @@ router.post('/payOwnersGui', async (req, res) => {
   } else {
     res.status(403).send('You\'re not supposed to be here');
   }
+});
+
+router.post('/vendordetails', async (req, res) => {
+  if (req.query.apiKey == process.env.MINE_API_KEY) {
+    vendor = await Vendor.findOne({vendorName: 'vendo'}).exec();
+
+    if (!vendor) {
+      res.send({success: false, message: 'Failure to locate vendor'});
+    }
+    account = await Account.findOne({owner: vendor.id}).exec();
+
+    if (!account) {
+      res.send({success: false, message: 'Failure to locate account'});
+    }
+
+    contract = await Contract.findOne({deployerAddress: account.id});
+
+    if (!contract) {
+      res.send({success: false, message: 'Failure to locate contract'});
+    }
+
+    balance = await web3.eth.getBalance(account.address);
+    balance = await web3.utils.fromWei(balance, 'ether');
+
+    res.send({success: true, balance: balance, contract: contract.contractAddresses[0], vendorAddress: account.address})
+  } else {
+    res.status(403).send('You\'re not supposed to be here');
+  }
+
 });
 
 
