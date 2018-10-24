@@ -302,24 +302,24 @@ router.post('/payOwnersGui', async (req, res) => {
 
 router.post('/vendordetails', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
-    vendor = await Vendor.findOne({vendorName: 'vendo'}).exec();
+    let vendor = await Vendor.findOne({vendorName: 'vendo'}).exec();
 
     if (!vendor) {
       res.send({success: false, message: 'Failure to locate vendor'});
     }
-    account = await Account.findOne({owner: vendor.id}).exec();
+    let account = await Account.findOne({owner: vendor.id}).exec();
 
     if (!account) {
       res.send({success: false, message: 'Failure to locate account'});
     }
 
-    contract = await Contract.findOne({deployerAddress: account.id});
+    let contract = await Contract.findOne({deployerAddress: account.id});
 
     if (!contract) {
       res.send({success: false, message: 'Failure to locate contract'});
     }
 
-    balance = await web3.eth.getBalance(account.address);
+    let balance = await web3.eth.getBalance(account.address);
     balance = await web3.utils.fromWei(balance, 'ether');
 
     res.send({success: true, balance: balance, contract: contract.contractAddresses[0], vendorAddress: account.address})
