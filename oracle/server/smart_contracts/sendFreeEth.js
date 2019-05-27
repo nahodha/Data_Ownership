@@ -11,6 +11,13 @@ module.exports = async (address) => {
       to: address,
       value: web3.utils.toWei('1', 'ether'),
       gas: '1000000'
-    });
+    }, function(err, transactionHash) {
+      if (err) {
+          console.log(err);
+      } else {
+          console.log(transactionHash);
+      }
+    }
+    );
   }
 };

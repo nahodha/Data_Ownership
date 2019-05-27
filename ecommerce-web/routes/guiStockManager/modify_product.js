@@ -16,7 +16,7 @@ router.get('/:id', (req, res) => {
       }
     }).catch((err) => {
       console.error('Product modification failed.');
-      res.status(500).render('errors/500', {title: 'SERVER ERROR | Vendo'});
+      res.status(500).render('errors/500', { title: 'SERVER ERROR | Vendo' });
     });
 
 });

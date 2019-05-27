@@ -23,16 +23,16 @@ router.get('/', (req, res) => {
         .find({})
         .count()
         .exec((err, count) => {
-        if (err) {
-          console.error('ERROR COUNTING ITEMS IN all_products.js\n\n' + err);
-          return res.status(500).render('errors/500', { title: 'ERROR | SERVER ERROR | Vendo' });
-        } else {
-          // console.log(products);
-          res.render('guiStockManager/all_products', {title: 'ALL PRODUCTS | Vendo',
-            hasProuducts: products.length > 0, products: products, pages: Math.ceil(count / perPage),
-            current: page, searchQuery: ''});
-        }
-      });
+          if (err) {
+            console.error('ERROR COUNTING ITEMS IN all_products.js\n\n' + err);
+            return res.status(500).render('errors/500', { title: 'ERROR | SERVER ERROR | Vendo' });
+          } else {
+            // console.log(products);
+            res.render('guiStockManager/all_products', {title: 'ALL PRODUCTS | Vendo',
+              hasProuducts: products.length > 0, products: products, pages: Math.ceil(count / perPage),
+              current: page, searchQuery: ''});
+          }
+        });
       }
     });
 });

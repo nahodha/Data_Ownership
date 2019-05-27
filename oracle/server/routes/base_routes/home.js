@@ -162,6 +162,7 @@ router.get('/addMinerGui', (req, res) => {
   });
 });
 
+// Add address of contract miner to be able to mine.
 router.post('/addMinerGui', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     let minerAccount = await Account.findOne({ address: req.body.address }).exec();
@@ -211,10 +212,13 @@ router.get('/mineGui', (req, res) => {
   });
 });
 
+// When a vendor begins mining, they send out earnings to owners of the data.
 router.post('/mineGui', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     const Vendor = require('../../models/Vendor');
     let vendor = await Vendor.findOne({ vendorName: 'vendo' }).exec();
+
+    // Make sure the vendor exists or their password is correct.
     if (!vendor || req.body.password != process.env.VENDOR_PASSWORD) {
       return res.redirect('/mineGui');
     }
@@ -227,6 +231,7 @@ router.post('/mineGui', async (req, res) => {
     // Get contract assume that address will always be passed as argument for now
     let mine = await Mine(req.body.contractAddress);
 
+    // Synchronously begin mining data from the contract.
     let mined = await mine.methods.startMine()
       .send({
         value: web3.utils.toWei('0.6', 'ether'),
@@ -234,6 +239,7 @@ router.post('/mineGui', async (req, res) => {
         gas: '1000000'
       });
 
+    // If mining happens correctly it will return true
     if (mined) {
       req.flash('success', 'Successfully Mined contract');
       return res.redirect('/mineGui');
@@ -247,7 +253,6 @@ router.post('/mineGui', async (req, res) => {
     res.status(403).send('You\'re not supposed to be here');
   }
 });
-
 
 router.get('/payOwnersGui', (req, res) => {
   const errors = req.flash('error');
@@ -265,11 +270,12 @@ router.get('/payOwnersGui', (req, res) => {
   });
 });
 
-
+// Add owners to mining pool so that they can begin earning.
 router.post('/payOwnersGui', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     let user = await User.findOne({email: req.body.email}).exec();
 
+    // Make sure the user actually exists and the password and password are correct..
     if (!user || !user.validUserPassword(req.body.password)) {
       return res.redirect('/payOwnersGui');
     }
@@ -300,6 +306,7 @@ router.post('/payOwnersGui', async (req, res) => {
   }
 });
 
+// Return vendors details such as balance, contracts
 router.post('/vendordetails', async (req, res) => {
   if (req.query.apiKey == process.env.MINE_API_KEY) {
     let vendor = await Vendor.findOne({vendorName: 'vendo'}).exec();
@@ -313,12 +320,14 @@ router.post('/vendordetails', async (req, res) => {
       res.send({success: false, message: 'Failure to locate account'});
     }
 
+    // Get vendor contract.
     let contract = await Contract.findOne({deployerAddress: account.id});
 
     if (!contract) {
       res.send({success: false, message: 'Failure to locate contract'});
     }
 
+    // Get current balance for the vendor address
     let balance = await web3.eth.getBalance(account.address);
     balance = await web3.utils.fromWei(balance, 'ether');
 

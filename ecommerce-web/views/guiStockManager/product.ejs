@@ -10,13 +10,13 @@
           </div>
 
           <h3 class="text-center"><strong><%= product.productName %></strong></h3>
-          <h2 class="text-center text-success">KSH. <%= product.price %></h2>
+          <h2 class="text-center text-success">ETH <%= product.price %></h2>
           <blockquote class="text-primary">
             <%= product.description %>
           </blockquote>
-          <p class="text-center">
-            <a href="/purchase" class="btn btn-warning">Purchase</a>
-          </p>
+          <!--p class="text-center">
+            <a href="/stock/gui/modify" class="btn btn-warning">Edit Product</a>
+          </p-->
         </div>
       </div>
 <%- include('../base/footer.ejs') -%>
