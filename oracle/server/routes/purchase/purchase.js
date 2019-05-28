@@ -46,7 +46,7 @@ router.post('/:id', async (req, res, ) => {
   if (addedBuyer) {
     let buy = await Sell.methods.buy()
       .send({
-        value: web3.utils.toWei('0.002', 'ether'),
+        value: web3.utils.toWei(req.body.price, 'ether'),
         from: buyerAccount.address,
         gas: '1000000'
       });
